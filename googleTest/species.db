@@ -1,0 +1,3 @@
+-|species|kind
+<|kind,VARCHAR(10)|
+*|NULL|

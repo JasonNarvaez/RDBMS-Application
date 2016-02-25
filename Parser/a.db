@@ -1,0 +1,7 @@
+-|a|projection
+<|aname,VARCHAR(20)|akind,VARCHAR(8)|
+*|"Joe"|"cat"|
+*|"Spot"|"dog"|
+*|"Snoopy"|"dog"|
+*|"Tweety"|"bird"|
+*|"Joe"|"bird"|

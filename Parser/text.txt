@@ -1,0 +1,37 @@
+CREATE TABLE animals (name VARCHAR(20), kind VARCHAR(8), years INTEGER) PRIMARY KEY (name, kind);
+INSERT INTO animals VALUES FROM ("Joe", "cat", 4);
+INSERT INTO animals VALUES FROM ("Spot", "dog", 10);
+INSERT INTO animals VALUES FROM ("Snoopy", "dog", 3);
+INSERT INTO animals VALUES FROM ("Tweety", "bird", 1);
+INSERT INTO animals VALUES FROM ("Joe", "bird", 2);
+SHOW animals;
+
+UPDATE animals SET name="Dave" WHERE kind=="cat";
+SHOW animals;
+
+DELETE FROM animals WHERE kind=="bird";
+SHOW animals;
+
+dogs <- select (kind == "dog") animals;
+SHOW dogs;
+
+old_dogs <- select (years > 9) dogs;
+SHOW old_dogs;
+
+cats_or_dogs2 <- (project (kind) dogs) + (project (kind) (select (kind == "cat") animals));
+SHOW cats_or_dogs2;
+
+
+cats_or_dogs1 <- (select (kind == "cat") animals) +  dogs;
+SHOW cats_or_dogs1;
+
+
+
+a <- rename (aname, akind) (project (name, kind) animals);
+SHOW a;
+
+
+WRITE animals;
+CLOSE animals;
+
+EXIT;
