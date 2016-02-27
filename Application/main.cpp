@@ -41,5 +41,9 @@ int main(){
 
 	cout << "Your database currently looks like this: \n";
 	ShowProject(projectName);
-	
+
+	cout << "\nMenu: To show your tables(1)\n to insert to a table(2)\n to Delete(3)\n to Update(4)\n to Save(5)\n to make a handwritten Query(6)\n to exit the program and save your progress(0)\n";
+	cin >> input;
+
+
 }
