@@ -40,6 +40,7 @@ Functions:
 
 #include <algorithm>
 #include <iomanip>
+#include <iostream>
 #include <fstream>
 #include <sstream>
 #include <string>
@@ -68,7 +69,7 @@ class Engine {
   	void DisplayTable (Table table);
 
   	void Save (string filename);
-  	void Open (string filename);
+  	int Open (string filename);
 
   	// Relational Algebra
   	Table Selection (string tableName, string conditionColum, string conditionType ,string condition);
@@ -292,9 +293,11 @@ void Engine::Save(string filename){
 	textfile.close();
 }
 
-void Engine::Open(string filename){
+int Engine::Open(string filename){
 
-	ifstream input(filename + "db");
+	ifstream input(filename + ".db");
+	cout << filename << endl;
+	// cout << input << endl;
 	if(input){
 		string word;
 		string EngineName;
@@ -328,8 +331,12 @@ void Engine::Open(string filename){
 				}
 			}
 		}
+		return 0;
 	}
-	else cerr << filename + " doesn't exist\n";
+	else{ 
+		cerr << filename + " doesn't exist.\n";
+		return 1;
+	}
 }
 
 Table Engine::Selection (string tableName, string conditionColum, string conditionType, string condition) {

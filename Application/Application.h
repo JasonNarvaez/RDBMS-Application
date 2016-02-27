@@ -45,12 +45,21 @@ void ShowProject(string projectName){ //shows all tables in the current project
 	parser.Evaluate("SHOW " + projectName + "StoreItemLink");
 }
 
-void OpenProject(string projectName){ //opens a previous project
-	engine.Open(projectName + "Warehouse");
-	engine.Open(projectName + "Store");
-	engine.Open(projectName + "Item");
-	engine.Open(projectName + "WarehouseStoreLink ");
-	engine.Open(projectName + "StoreItemLink");
+int OpenProject(string projectName){ //opens a previous project
+	vector<int> worked;
+	worked.push_back(engine.Open(projectName + "Warehouse")); //error checking for corrupt or non-existant files
+	worked.push_back(engine.Open(projectName + "Store"));
+	worked.push_back(engine.Open(projectName + "Item"));
+	worked.push_back(engine.Open(projectName + "WarehouseStoreLink"));
+	worked.push_back(engine.Open(projectName + "StoreItemLink"));
+
+	for(int i = 0; i < worked.size(); i++){ // to determine if any of the files can't be opened
+		cout << worked[i] << endl;
+		if(worked[i] == 1){ // if even one file is corrupt, do not continue
+			return 1;
+		}
+	}
+	return 0; // if all the files are there, proceed
 }
 
 void ProjectInsert(string projectName){

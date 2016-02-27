@@ -38,8 +38,15 @@ int main(){
 
 				cout << "Please enter the name of the project you wish to open.\n";
 				cin >> projectName;
-				OpenProject(projectName);
-
+				int worked = OpenProject(projectName);
+				
+				if (worked = 0){
+					ShowProject(projectName);
+					break;
+				}
+				else{
+					continue;
+				}
 			}
 			else {
 
@@ -60,12 +67,7 @@ int main(){
 	bool breakvar = false; //to break from while and end program
 	while(breakvar == false){
 
-		cout << "\nMenu:\n To show your tables, type 1\n 
-		to add a warehouse, store, or item, type 2\n 
-		to link an item to a store or link a store to a warehouse,type 3\n 
-		to Delete, type 4\n to Update a table, type 5\n 
-		to Save a table, type 6\n to make a handwritten Query, type 7\n 
-		to exit the program and save your progress, type 0\n";
+		cout << "\nMenu:\n To show your tables, type 1\n to add a warehouse, store, or item, type 2\n to link an item to a store or link a store to a warehouse,type 3\n to Delete, type 4\n to Update a table, type 5\n to Save a table, type 6\n to make a handwritten Query, type 7\n to exit the program and save your progress, type 0\n";
 		//do we need any more functions?
 		cin >> userInput;
 
