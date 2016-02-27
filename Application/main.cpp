@@ -82,8 +82,10 @@ int main(){
 				LinkProject(projectName);
 				break;
 			case 4: // delete
+				TableDelete(projectName); //throwing an error when more than one thing is 
 				break;
 			case 5: // update
+
 				break; 
 			case 6: // save
 				SingleTableSave(projectName);

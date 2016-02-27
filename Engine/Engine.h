@@ -296,7 +296,6 @@ void Engine::Save(string filename){
 int Engine::Open(string filename){
 
 	ifstream input(filename + ".db");
-	cout << filename << endl;
 	// cout << input << endl;
 	if(input){
 		string word;
