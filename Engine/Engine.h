@@ -295,38 +295,41 @@ void Engine::Save(string filename){
 void Engine::Open(string filename){
 
 	ifstream input(filename);
-	string word;
-	string EngineName;
-	vector<string> data;
-	vector<string> ByPipe;
-	vector<string> ByComma;	
-	vector <string> pk;
-	while(getline(input,word)){
-		if (trim(word) != ""){
-			ByPipe = splitStrings(word, '|');
-			if(ByPipe[0] == "-"){
-				for(int i = 2; i < ByPipe.size(); i++){
-					pk.push_back(ByPipe[i]);
+	if(input){
+		string word;
+		string EngineName;
+		vector<string> data;
+		vector<string> ByPipe;
+		vector<string> ByComma;	
+		vector <string> pk;
+		while(getline(input,word)){
+			if (trim(word) != ""){
+				ByPipe = splitStrings(word, '|');
+				if(ByPipe[0] == "-"){
+					for(int i = 2; i < ByPipe.size(); i++){
+						pk.push_back(ByPipe[i]);
+					}
+					CreateTable(ByPipe[1], pk);
+					EngineName = ByPipe[1];
+					pk.clear();
 				}
-				CreateTable(ByPipe[1], pk);
-				EngineName = ByPipe[1];
-				pk.clear();
-			}
-			else if(ByPipe[0] == "<"){
-				for(int it = 1; it < ByPipe.size(); it++){
-					ByComma = splitStrings(ByPipe[it], ',');
-					AddColumn(EngineName, ByComma[0], ByComma[1]);
+				else if(ByPipe[0] == "<"){
+					for(int it = 1; it < ByPipe.size(); it++){
+						ByComma = splitStrings(ByPipe[it], ',');
+						AddColumn(EngineName, ByComma[0], ByComma[1]);
+					}
 				}
-			}
-			else if(ByPipe[0] == "*"){
-				for(int it = 1; it < ByPipe.size(); it++){
-					data.push_back(ByPipe[it]);
+				else if(ByPipe[0] == "*"){
+					for(int it = 1; it < ByPipe.size(); it++){
+						data.push_back(ByPipe[it]);
+					}
+					AddEntry(EngineName, data);
+					data.clear();
 				}
-				AddEntry(EngineName, data);
-				data.clear();
 			}
 		}
 	}
+	else cerr << filename + " doesn't exist\n";
 }
 
 Table Engine::Selection (string tableName, string conditionColum, string conditionType, string condition) {

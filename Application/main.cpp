@@ -27,7 +27,8 @@ int main(){
 			}
 			else if(input == "y"){
 				cout << "Please enter the name of the project you wish to open.\n";
-				// open all files
+				cin >> projectName;
+				OpenProject(projectName);
 			}
 			else {
 				cout << "incorrect input.";

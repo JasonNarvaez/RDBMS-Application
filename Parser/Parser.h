@@ -15,16 +15,16 @@ using namespace std;
 class Parser {
 public:
   void Evaluate (string expression);
-	void show (string expression);
-	void createTable (string expression);
-	void insert (string expression);
-	void close (string expression);
-	void write (string expression);
+	void show (string expression); //1
+	void createTable (string expression); //done
+	void insert (string expression); //2
+	void close (string expression); //0
+	void write (string expression); //5
 	void exit ();
-	void Query(string input);
-	void openFile();
-	void Delete(string input);
-	void Update(string input);
+	void Query(string input); //6
+	void openFile(); 
+	void Delete(string input); //3
+	void Update(string input); //4
 
 };
 
