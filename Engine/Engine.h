@@ -288,13 +288,13 @@ void Engine::Save(string filename){
 			}
 		}
 	}
-
+	cout << "saved\n";
 	textfile.close();
 }
 
 void Engine::Open(string filename){
 
-	ifstream input(filename);
+	ifstream input(filename + "db");
 	if(input){
 		string word;
 		string EngineName;

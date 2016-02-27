@@ -60,7 +60,12 @@ int main(){
 	bool breakvar = false; //to break from while and end program
 	while(breakvar == false){
 
-		cout << "\nMenu:\n To show your tables, type 1\n to add a warehouse, store, or item, type 2\n to link an item to a store or link a store to a warehouse,type 3\n to Delete, type 4\n to Update a table, type 5\n to Save a table, type 6\n to make a handwritten Query, type 7\n to exit the program and save your progress, type 0\n";
+		cout << "\nMenu:\n To show your tables, type 1\n 
+		to add a warehouse, store, or item, type 2\n 
+		to link an item to a store or link a store to a warehouse,type 3\n 
+		to Delete, type 4\n to Update a table, type 5\n 
+		to Save a table, type 6\n to make a handwritten Query, type 7\n 
+		to exit the program and save your progress, type 0\n";
 		//do we need any more functions?
 		cin >> userInput;
 
@@ -79,11 +84,15 @@ int main(){
 			case 5: // update
 				break; 
 			case 6: // save
-				parser.Evaluate(input);
+				SingleTableSave(projectName);
 	 			break;
 	 		case 7: // handwritten query
+	 			cout << "Please Enter your query\n";
+	 			cin >> input;
+	 			parser.Evaluate(input);
 	 			break;
 			case 0: // quit
+				parser.Evaluate("EXIT");
 				breakvar = true;
 				break;
 			default:

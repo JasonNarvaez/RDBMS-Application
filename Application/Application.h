@@ -61,7 +61,7 @@ void ProjectInsert(string projectName){
 	char name[50], address[200], warehouse[50], brand[50], aisle[50];
 
 	// cannot do the commas, does not keep spaces
-	cout << "What would you like to add?\n Warehouse(0)\n Store(1)\n Item(2)\n Please note that you must create a warehouse before you can create the store that\n it links to and you must create a store before you can create the item it links to\n";
+	cout << "What would you like to add?\n Warehouse(0)\n Store(1)\n Item(2)\n";
 	cin >> input;
 	switch(input){
 
@@ -125,7 +125,7 @@ void LinkProject(string projectName){
 	string itemBarcode, storeID, warehouseID;
 	int input;
 
-	cout << "To add an item to a store's chart, type 0\nTo add a store to a warehouse's roster, type 1\n";
+	cout << "To add an item to a store's inventory, type 0\nTo add a store to a warehouse's roster, type 1\n";
 	cin >> input;
 	switch(input){
 		case 0: // add item to store
@@ -156,6 +156,32 @@ void LinkProject(string projectName){
 			break;
 		default:
 			cout << "That wasn't one of the acceptable choices";
+			break;
+	}
+}
+
+void SingleTableSave(string projectName){
+
+	int input;
+	cout << "What would you like to save?\n for the Warehouse table, type 0\n for the Store table, type 1\n for the Item table, type 2\n for the Warehouse roster, type 3\n for the store inventory, type 4\n";
+	switch(input){
+		case 0: // saves warehouse table
+			parser.Evaluate("WRITE " + projectName + "Warehouse");
+			break;
+		case 1: // saves store table
+			parser.Evaluate("WRITE " + projectName + "Store");
+			break;
+		case 2: // saves item table
+			parser.Evaluate("WRITE " + projectName + "Item");
+			break;
+		case 3: // saves warehouse roster
+			parser.Evaluate("WRITE " + projectName + "WarehouseStoreLink");
+			break;
+		case 4: // saves store inventory
+			parser.Evaluate("WRITE " + projectName + "StoreItemLink");
+			break;
+		default:
+			cout << "Incorrect input";
 			break;
 	}
 }

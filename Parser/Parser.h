@@ -188,7 +188,8 @@ void Parser::exit(){
 	for(int i = 0; i<engine.allTables.size();i++)
 	{
 		if(engine.allTables[i].name != "---------"){
-			write(engine.allTables[i].name);
+      cout << engine.allTables[i].name << endl;
+			engine.Save(engine.allTables[i].name);
 		}
 		
 	}
