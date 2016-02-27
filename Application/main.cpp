@@ -10,6 +10,7 @@ int main(){
 	int userInput = -1; // for the switch statement
 	string input; // for the general user input
 	string projectName; // holds the project name
+	system("clear");
 	while(input != "q"){
 
 		cout << "Would you like to create a new Project?[y/n]\n";
@@ -38,8 +39,16 @@ int main(){
 
 				cout << "Please enter the name of the project you wish to open.\n";
 				cin >> projectName;
-				OpenProject(projectName);
-
+				int worked = OpenProject(projectName);
+				system ("clear");
+				
+				if (worked == 0){
+					cout << "DATABASE LOADED" << endl;
+					break;
+				}
+				else{
+					continue;
+				}
 			}
 			else {
 
@@ -60,42 +69,46 @@ int main(){
 	bool breakvar = false; //to break from while and end program
 	while(breakvar == false){
 
-		cout << "\nMenu:\n To show your tables, type 1\n 
-		to add a warehouse, store, or item, type 2\n 
-		to link an item to a store or link a store to a warehouse,type 3\n 
-		to Delete, type 4\n to Update a table, type 5\n 
-		to Save a table, type 6\n to make a handwritten Query, type 7\n 
-		to exit the program and save your progress, type 0\n";
+		cout << "\nMenu:\n To show your tables, type 1\n to add a warehouse, store, or item, type 2\n to link an item to a store or link a store to a warehouse,type 3\n to Delete, type 4\n to Update a table, type 5\n to Save a table, type 6\n to make a handwritten Query, type 7\n to exit the program and save your progress, type 0\n";
 		//do we need any more functions?
 		cin >> userInput;
-
-		switch(userInput){
+		switch(userInput){ 
 			case 1: // show
+				system("clear");
 				ShowProject(projectName);
 				break;
 			case 2: // insert
+				system("clear");
 				ProjectInsert(projectName);
 				break;
 			case 3: // link
+				system("clear");
 				LinkProject(projectName);
 				break;
 			case 4: // delete
+				system("clear");
+				TableDelete(projectName); //throwing an error when more than one thing is 
 				break;
 			case 5: // update
+
 				break; 
 			case 6: // save
+				system("clear");
 				SingleTableSave(projectName);
 	 			break;
 	 		case 7: // handwritten query
+				system("clear");
 	 			cout << "Please Enter your query\n";
 	 			cin >> input;
 	 			parser.Evaluate(input);
 	 			break;
 			case 0: // quit
+				system("clear");
 				parser.Evaluate("EXIT");
 				breakvar = true;
 				break;
 			default:
+				system("clear");
 				cout << "That was not a choice";
 				break;
 		}

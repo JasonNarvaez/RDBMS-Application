@@ -1,6 +1,7 @@
 //Application.h
 #include <vector>
 #include <iostream>
+#include <stdlib.h>
 #include "../Parser/Parser.h"
 #include "../Engine/Engine.h"
 
@@ -10,9 +11,12 @@ class Application {
 public:
 	void CreateNewProject(string name);  //creates a new project	
 	void ShowProject(string projectName);
-	void OpenProject(string projectName);
+	int OpenProject(string projectName);
 	void ProjectInsert(string projectName);
 	void LinkProject(string projectName);
+	void SingleTableSave(string projectName);
+	void TableUpdate(string projectName);
+	void TableDelete(string projectName);
 };
 
 // create a table warehouses
@@ -25,13 +29,13 @@ void CreateNewProject(string name){
 	parser.Evaluate("CREATE TABLE " + name + "Store (Name VARCHAR(100), Location VARCHAR(200), IDNumber INTEGER) PRIMARY KEY (IDNumber)");
 
 	// create a table items
-	parser.Evaluate("CREATE TABLE " + name + "Item (Name VARCHAR(100), Brand VARCHAR(50), Aisle VARCHAR(100), Barcode INTEGER) PRIMARY KEY (IDNumber)");
+	parser.Evaluate("CREATE TABLE " + name + "Item (Name VARCHAR(100), Brand VARCHAR(50), Aisle VARCHAR(100), Barcode INTEGER) PRIMARY KEY (Barcode)");
 
 	// create a Table link the store with the warehouse
-	parser.Evaluate("CREATE TABLE " + name + "WarehouseStoreLink (StoreID INTEGER, WarehouseID INTEGER) PRIMARY KEY (IDNumber)");
+	parser.Evaluate("CREATE TABLE " + name + "WarehouseStoreLink (StoreID INTEGER, WarehouseID INTEGER) PRIMARY KEY (StoreID, WarehouseID)");
 
 	// create a Table to link the item to the store
-	parser.Evaluate("CREATE TABLE " + name + "StoreItemLink (StoreID INTEGER, ItemID INTEGER) PRIMARY KEY (IDNumber)");
+	parser.Evaluate("CREATE TABLE " + name + "StoreItemLink (StoreID INTEGER, ItemID INTEGER) PRIMARY KEY (StoreID, ItemID)");
 
 	cout << "\nNew Project for " + name + " Created!\n\n";
 }
@@ -45,12 +49,20 @@ void ShowProject(string projectName){ //shows all tables in the current project
 	parser.Evaluate("SHOW " + projectName + "StoreItemLink");
 }
 
-void OpenProject(string projectName){ //opens a previous project
-	engine.Open(projectName + "Warehouse");
-	engine.Open(projectName + "Store");
-	engine.Open(projectName + "Item");
-	engine.Open(projectName + "WarehouseStoreLink ");
-	engine.Open(projectName + "StoreItemLink");
+int OpenProject(string projectName){ //opens a previous project
+	vector<int> worked;
+	worked.push_back(parser.openFile(projectName + "Warehouse")); //error checking for corrupt or non-existant files
+	worked.push_back(parser.openFile(projectName + "Store"));
+	worked.push_back(parser.openFile(projectName + "Item"));
+	worked.push_back(parser.openFile(projectName + "WarehouseStoreLink"));
+	worked.push_back(parser.openFile(projectName + "StoreItemLink"));
+
+	for(int i = 0; i < worked.size(); i++){ // to determine if any of the files can't be opened
+		if(worked[i] == 1){ // if even one file is corrupt, do not continue
+			return 1;
+		}
+	}
+	return 0; // if all the files are there, proceed
 }
 
 void ProjectInsert(string projectName){
@@ -186,6 +198,44 @@ void SingleTableSave(string projectName){
 	}
 }
 
+void TableUpdate(string projectName){
+
+	int input;
+	string id;
+	cout << "Which file would you like to delete from?\n for the Warehouse table, type 0\n for the Store table, type 1\n for the Item table, type 2\n";
+	cin >> input;
+	switch(input){
+		case 0: // saves warehouse table
+			cout << "Please type the ID of the warehouse you wish to delete\n";
+			parser.Evaluate("SHOW " + projectName + "Warehouse");
+			cin >> id;
+			parser.Evaluate("DELETE FROM " + projectName + "Warehouse WHERE IDNumber ==" + id);
+			// parser.Evaluate("DELETE FROM " + projectName + "WarehouseStoreLink");
+			break;
+		case 1: // saves store table
+			cout << "Please type the ID of the Store you wish to delete\n";
+			parser.Evaluate("SHOW " + projectName + "Store");
+			cin >> id;
+			// parser.Evaluate("DELETE FROM " + projectName + "StoreItemLink");
+			// parser.Evaluate("DELETE FROM " + projectName + "WarehouseStoreLink");
+			parser.Evaluate("DELETE FROM " + projectName + "Store WHERE IDNumber ==" + id);
+			break;
+		case 2: // saves item table
+			cout << "Please type the Barcode of the Item you wish to delete\n";
+			parser.Evaluate("SHOW " + projectName + "Item");
+			cin >> id;
+			// parser.Evaluate("DELETE FROM " + projectName + "StoreItemLink");
+			parser.Evaluate("DELETE FROM " + projectName + "Item WHERE Barcode ==" + id);
+			break;
+		default:
+			cout << "Incorrect input";
+			break;
+	}
+}
+
+void TableDelete(string projectName) {
+
+}
 
 
 
