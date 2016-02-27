@@ -60,32 +60,35 @@ int main(){
 	bool breakvar = false; //to break from while and end program
 	while(breakvar == false){
 
-		cout << "\nMenu:\n To show your tables type 1\n to insert to a table type 2\n to Delete type 3\n to Update type 4\n to Save type 5\n to make a handwritten Query type 6\n to exit the program and save your progress type 0\n";
-		//do we need anymore functions?
+		cout << "\nMenu:\n To show your tables, type 1\n to add a warehouse, store, or item, type 2\n to link an item to a store or link a store to a warehouse,type 3\n to Delete, type 4\n to Update a table, type 5\n to Save a table, type 6\n to make a handwritten Query, type 7\n to exit the program and save your progress, type 0\n";
+		//do we need any more functions?
 		cin >> userInput;
-		cout << userInput;
+
 		switch(userInput){
 			case 1: // show
 				ShowProject(projectName);
-			break;
+				break;
 			case 2: // insert
 				ProjectInsert(projectName);
-			break;
-			case 3: // delete
-			break;
-			case 4: // update
-			break;
-			case 5: // save
-			break; 
-			case 6: // handwritten query
+				break;
+			case 3: // link
+				LinkProject(projectName);
+				break;
+			case 4: // delete
+				break;
+			case 5: // update
+				break; 
+			case 6: // save
 				parser.Evaluate(input);
-	 		break;
+	 			break;
+	 		case 7: // handwritten query
+	 			break;
 			case 0: // quit
 				breakvar = true;
-			break;
+				break;
 			default:
 				cout << "That was not a choice";
-			break;
+				break;
 		}
 	}
 }
