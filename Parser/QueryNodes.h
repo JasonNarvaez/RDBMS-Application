@@ -1,3 +1,5 @@
+#pragma once
+
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -113,7 +115,59 @@ int findMiddleCondition (string str) {
     return middleOperationIndex;
 }
 
+int countParenthesis(string str){
+	int numOpenParenthesis = 0;
+    int numCloseParenthesis = 0;
+    int middleOperationIndex = -1;
 
+    if (str.find('(') != string::npos) {
+        int i = 0;
+        while (middleOperationIndex == -1) {  
+            if (str[i] == '(') {
+                numOpenParenthesis++;
+            }
+            if (str[i] == ')') {
+                numCloseParenthesis++;
+
+            }
+            if (numCloseParenthesis != 0) {
+                if (numOpenParenthesis == numCloseParenthesis) {
+                    middleOperationIndex = i;
+                }
+            }
+            i++;
+        }
+    }
+	if (numOpenParenthesis != numCloseParenthesis){
+		cerr << "Parenthesis mismatch!" << endl; 
+	}
+    return numCloseParenthesis;
+}
+
+int findLastParenthesis (string str) {
+    int numOpenParenthesis = 0;
+    int numCloseParenthesis = 0;
+    int middleOperationIndex = -1;
+
+    if (str.find('(') != string::npos) {
+        
+        for (int i=0; i<str.length(); i++) {  
+            if (str[i] == '(') {
+                numOpenParenthesis++;
+            }
+            if (str[i] == ')') {
+                numCloseParenthesis++;
+				if (numOpenParenthesis == numCloseParenthesis) {
+                    return i;
+                }
+            }
+            
+        }
+    }
+
+	cerr << "No matching end parenthesis!" << endl;
+    return -1;
+}
 
 /*------------------------------
 Relation Name Class
@@ -173,21 +227,51 @@ class SelectionNode {
   public:
   	string condition;
   	ExpressionNode* expression;
+	ExpressionNode* leftExpr;
+	ExpressionNode* rightExpr;
 
   	SelectionNode(string selectExpression) {
   		int start = selectExpression.find("(");
   		int end = selectExpression.find(")");
-
+		int numParenthesis;
+		
+		numParenthesis = countParenthesis(selectExpression);
+		cout << "number of parenthesis: " << numParenthesis << endl;
+		
   		condition = selectExpression.substr(start+1, end-start-1);
   		string _expression = selectExpression.substr(end+1);
-
+		
 		if (_expression[0] == '(') {
   			_expression = _expression.substr(1,_expression.length()-2);
   		}
-
-  		expression = new ExpressionNode(_expression);
-  		expression -> Evaluate();
-
+		if (numParenthesis == 1){//no nested conditions
+			expression = new ExpressionNode(_expression);
+			expression -> Evaluate();
+		}
+		else {
+			int lastParenIndex = findLastParenthesis(selectExpression);
+			string entireCondition = selectExpression.substr(start,lastParenIndex-start+1);
+			cout << "select expr: " << selectExpression << endl;
+			cout << "expression: " << _expression << endl;
+			
+			cout << "last parenthesis index: " << lastParenIndex << endl;
+			if (entireCondition[0] == '(') {
+				entireCondition = entireCondition.substr(1,entireCondition.length()-2);
+			}
+			cout << "conditional statement: " << entireCondition << endl;
+			int conditionIndex = -1;
+			conditionIndex = findMiddleCondition(entireCondition);
+			
+			string leftSide = entireCondition.substr(0,conditionIndex+1);
+			string rightSide = entireCondition.substr(conditionIndex+3,entireCondition.length()-1);
+			cout << "left side: " << leftSide << endl;
+			cout << "right side: " << rightSide << endl;
+			
+			leftExpr = new ExpressionNode(leftSide);
+			rightExpr = new ExpressionNode(rightSide);
+			leftExpr -> Evaluate();
+			rightExpr -> Evaluate();
+		}
          
   	}
 
