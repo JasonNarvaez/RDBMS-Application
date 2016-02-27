@@ -22,7 +22,7 @@ public:
 	void write (string expression); //5
 	void exit ();
 	void Query(string input); //6
-	void openFile(); 
+	int openFile(string filename); 
 	void Delete(string input); //3
 	void Update(string input); //4
 
@@ -248,43 +248,8 @@ void Parser::Query(string input) {
 }
 
 
-void Parser::openFile(){
-	string command;
-	string newcmd;
-	
-	while (cin.good()){
-		
-		cin >> command;
-		if (command == "EXIT"){
-			exit();
-			break;
-		}
-		
-		
-		getline(cin,newcmd);
-		
-		newcmd = command + newcmd;
-		
-		if (command == "CREATE"){
-			createTable(newcmd);
-		}
-		else if (command == "INSERT") {
-			insert(newcmd);
-		}
-		else if (command == "SHOW") {
-			//show(newcmd);
-		}
-		else if (command == "CLOSE") {
-			//close(newcmd);
-		}
-		else if (command == "WRITE") {
-			//write(newcmd);
-		}
-		else {
-			Query(newcmd);
-		}
-		
-	}
+int Parser::openFile(string filename){
+    return engine.Open(filename);
 }
 
 

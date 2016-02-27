@@ -1,6 +1,7 @@
 //Application.h
 #include <vector>
 #include <iostream>
+#include <stdlib.h>
 #include "../Parser/Parser.h"
 #include "../Engine/Engine.h"
 
@@ -50,14 +51,13 @@ void ShowProject(string projectName){ //shows all tables in the current project
 
 int OpenProject(string projectName){ //opens a previous project
 	vector<int> worked;
-	worked.push_back(engine.Open(projectName + "Warehouse")); //error checking for corrupt or non-existant files
-	worked.push_back(engine.Open(projectName + "Store"));
-	worked.push_back(engine.Open(projectName + "Item"));
-	worked.push_back(engine.Open(projectName + "WarehouseStoreLink"));
-	worked.push_back(engine.Open(projectName + "StoreItemLink"));
+	worked.push_back(parser.openFile(projectName + "Warehouse")); //error checking for corrupt or non-existant files
+	worked.push_back(parser.openFile(projectName + "Store"));
+	worked.push_back(parser.openFile(projectName + "Item"));
+	worked.push_back(parser.openFile(projectName + "WarehouseStoreLink"));
+	worked.push_back(parser.openFile(projectName + "StoreItemLink"));
 
 	for(int i = 0; i < worked.size(); i++){ // to determine if any of the files can't be opened
-		cout << worked[i] << endl;
 		if(worked[i] == 1){ // if even one file is corrupt, do not continue
 			return 1;
 		}

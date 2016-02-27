@@ -284,9 +284,9 @@ void Table::AddEntry (vector <string> data) {
 				}	
 
 				if (testKeys.size() != 0) {
-					if (testKeys == newKeys) {
+					if ((testKeys == newKeys)  && (testKeys[0] != "NULL")) {
 						isDuplicate = true;
-						cout << "DUPLICATE PRIMARY KEYS";
+						cerr << name << ": DUPLICATE PRIMARY KEYS" << endl;;
 					}
 				}
 			
