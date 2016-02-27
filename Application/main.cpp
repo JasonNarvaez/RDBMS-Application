@@ -40,7 +40,7 @@ int main(){
 				cin >> projectName;
 				int worked = OpenProject(projectName);
 				
-				if (worked = 0){
+				if (worked == 0){
 					ShowProject(projectName);
 					break;
 				}
@@ -70,8 +70,8 @@ int main(){
 		cout << "\nMenu:\n To show your tables, type 1\n to add a warehouse, store, or item, type 2\n to link an item to a store or link a store to a warehouse,type 3\n to Delete, type 4\n to Update a table, type 5\n to Save a table, type 6\n to make a handwritten Query, type 7\n to exit the program and save your progress, type 0\n";
 		//do we need any more functions?
 		cin >> userInput;
-
-		switch(userInput){
+		cout << "HERe: " << userInput << endl;
+		switch(userInput){ 
 			case 1: // show
 				ShowProject(projectName);
 				break;

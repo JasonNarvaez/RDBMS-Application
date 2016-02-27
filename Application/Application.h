@@ -15,6 +15,7 @@ public:
 	void LinkProject(string projectName);
 	void SingleTableSave(string projectName);
 	void TableUpdate(string projectName);
+	void TableDelete(string projectName);
 };
 
 // create a table warehouses
@@ -232,6 +233,9 @@ void TableUpdate(string projectName){
 	}
 }
 
+void TableDelete(string projectName) {
+
+}
 
 
 

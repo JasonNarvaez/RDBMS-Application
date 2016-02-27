@@ -1,0 +1,3 @@
+-|southWarehouseStoreLink|StoreID|WarehouseID
+<|StoreID,INTEGER|WarehouseID,INTEGER|
+*|NULL|NULL|

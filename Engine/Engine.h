@@ -307,6 +307,9 @@ int Engine::Open(string filename){
 		while(getline(input,word)){
 			if (trim(word) != ""){
 				ByPipe = splitStrings(word, '|');
+				// for (auto n:ByPipe){
+				// 	cout << n << endl;
+				// }
 				if(ByPipe[0] == "-"){
 					for(int i = 2; i < ByPipe.size(); i++){
 						pk.push_back(ByPipe[i]);
@@ -325,6 +328,7 @@ int Engine::Open(string filename){
 					for(int it = 1; it < ByPipe.size(); it++){
 						data.push_back(ByPipe[it]);
 					}
+
 					AddEntry(EngineName, data);
 					data.clear();
 				}

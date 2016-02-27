@@ -236,23 +236,25 @@ void Table::AddEntry (vector <string> data) {
 		bool isCorrectType = true;
 
 		for (int i=0; i<data.size(); i++) {
-			if (header[i].type == "INTEGER") {
-				for (int j=0; j<data[i].size(); j++) {
-					if (!isdigit(data[i][j])) {
-						isCorrectType = false;
-						cerr << "INPUT IS NOT AN INTEGER" << endl;
+			if (data[i] != "NULL") {
+				if (header[i].type == "INTEGER") {
+					for (int j=0; j<data[i].size(); j++) {
+						if (!isdigit(data[i][j])) {
+							isCorrectType = false;
+							cerr << "INPUT IS NOT AN INTEGER" << endl;
+						}
 					}
 				}
-			}
-			else {
-				int pos1 = header[i].type.find("("); 
-				int pos2 = header[i].type.find(")");
+				else {
+					int pos1 = header[i].type.find("("); 
+					int pos2 = header[i].type.find(")");
 
-				int length = stoi(header[i].type.substr(pos1 +1, pos2-pos1-1));
+					int length = stoi(header[i].type.substr(pos1 +1, pos2-pos1-1));
 
-				if (data[i].size() > length) {
-					isCorrectType = false;
-					cerr << "INPUT IS TOO LONG" << endl;
+					if (data[i].size() > length) {
+						isCorrectType = false;
+						cerr << "INPUT IS TOO LONG" << endl;
+					}
 				}
 			}
 		}
