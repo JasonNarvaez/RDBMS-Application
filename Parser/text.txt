@@ -30,6 +30,8 @@ SHOW cats_or_dogs1;
 a <- rename (aname, akind) (project (name, kind) animals);
 SHOW a;
 
+b <- select((years >= 2) && (kind == "dog")) animals;
+SHOW b;
 
 WRITE animals;
 CLOSE animals;

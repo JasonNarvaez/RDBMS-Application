@@ -169,6 +169,26 @@ int findLastParenthesis (string str) {
     return -1;
 }
 
+string removeOuterParenthesis (string str) {
+	string temp;
+	if(str.find_first_of("(") != string::npos && str.find_last_of(")") != string::npos){
+		temp = str.substr(1, str.length()-2);
+		return temp;
+	}
+	else if (str.find_first_of("(") != string::npos) {
+		temp = str.substr(1, str.length()-1);
+		return temp;
+	}
+	else if (str.find_last_of(")") != string::npos) {
+		temp = str.substr(0, str.length()-2);
+		return temp;
+	}
+	else {
+		cout << "not outer parenthesis found!" << endl;
+		return str;
+	}
+}
+
 /*------------------------------
 Relation Name Class
 ------------------------------*/
@@ -221,6 +241,53 @@ class ExpressionNode {
 };
 
 /*------------------------------
+Condition Class
+------------------------------*/
+class ConditionStatement {
+  public:
+	string leftCond;
+	string rightCond;
+	string operation;//operation between the two sides
+	//ConditionStatement* nestedLeft;
+	//ConditionStatement* nestedRight;
+	ConditionStatement(string left, string right, string op): leftCond(left), rightCond(right), operation(op) { }
+	
+	bool isEmpty() { if (leftCond.empty()&&rightCond.empty()) return true; }
+	void evaluateCondition();
+};
+
+void ConditionStatement::evaluateCondition(){
+	string leftTemp;
+	string rightTemp;
+	leftCond = removeOuterParenthesis(leftCond);
+	rightCond = removeOuterParenthesis(rightCond);
+	/*
+	if (operation.find("&&") != string::npos){
+		cout << "&& condition parsed" << endl;
+		leftTemp = removeOuterParenthesis(leftCond);
+		rightTemp = removeOuterParenthesis(rightCond);
+		cout << "left cond: " << leftTemp << endl;
+		cout << "right cond: " << rightTemp << endl;
+		leftCond = leftTemp;
+		rightCond = rightTemp;
+		
+	}
+	else if (operation.find("||") != string::npos){
+		cout << "|| condition parsed" << endl;
+		leftTemp = removeOuterParenthesis(leftCond);
+		rightTemp = removeOuterParenthesis(rightCond);
+		cout << "left cond: " << leftTemp << endl;
+		cout << "right cond: " << rightTemp << endl;
+		leftCond = leftTemp;
+		rightCond = rightTemp;
+	}
+	else {
+		cout << "error parsing conditon" << endl;
+	}
+	*/
+}
+
+/*------------------------------
 Selection Class
 ------------------------------*/
 class SelectionNode {
@@ -229,54 +296,65 @@ class SelectionNode {
   	ExpressionNode* expression;
 	ExpressionNode* leftExpr;
 	ExpressionNode* rightExpr;
+	ConditionStatement* condStatement;
+	bool isSingleCondition;
 
   	SelectionNode(string selectExpression) {
   		int start = selectExpression.find("(");
   		int end = selectExpression.find(")");
 		int numParenthesis;
 		
+		
 		numParenthesis = countParenthesis(selectExpression);
-		cout << "number of parenthesis: " << numParenthesis << endl;
 		
   		condition = selectExpression.substr(start+1, end-start-1);
+		
   		string _expression = selectExpression.substr(end+1);
 		
 		if (_expression[0] == '(') {
   			_expression = _expression.substr(1,_expression.length()-2);
   		}
 		if (numParenthesis == 1){//no nested conditions
+			isSingleCondition = true;
 			expression = new ExpressionNode(_expression);
 			expression -> Evaluate();
 		}
 		else {
 			int lastParenIndex = findLastParenthesis(selectExpression);
 			string entireCondition = selectExpression.substr(start,lastParenIndex-start+1);
-			cout << "select expr: " << selectExpression << endl;
-			cout << "expression: " << _expression << endl;
+			isSingleCondition = false;
 			
-			cout << "last parenthesis index: " << lastParenIndex << endl;
+			
+			
+			_expression = selectExpression.substr(lastParenIndex+1);
+			
 			if (entireCondition[0] == '(') {
 				entireCondition = entireCondition.substr(1,entireCondition.length()-2);
 			}
-			cout << "conditional statement: " << entireCondition << endl;
+			
+			
 			int conditionIndex = -1;
 			conditionIndex = findMiddleCondition(entireCondition);
 			
 			string leftSide = entireCondition.substr(0,conditionIndex+1);
 			string rightSide = entireCondition.substr(conditionIndex+3,entireCondition.length()-1);
-			cout << "left side: " << leftSide << endl;
-			cout << "right side: " << rightSide << endl;
+			condition = entireCondition.substr(conditionIndex+1,2);
 			
-			leftExpr = new ExpressionNode(leftSide);
-			rightExpr = new ExpressionNode(rightSide);
-			leftExpr -> Evaluate();
-			rightExpr -> Evaluate();
+			condStatement = new ConditionStatement(leftSide, rightSide, condition);
+			
+			expression = new ExpressionNode(_expression);
+			expression -> Evaluate();
+			condStatement->evaluateCondition();
+			//leftExpr = new ExpressionNode(leftSide);
+			//rightExpr = new ExpressionNode(rightSide);
+			//leftExpr -> Evaluate();
+			//rightExpr -> Evaluate();
 		}
          
   	}
 
     Table Solve();
-
+	Table tableIntersection(Table table1, Table table2);
 };
 
 
@@ -612,7 +690,9 @@ Table queryNode::Solve() {
     return expression -> Solve();
 }
 
-
+Table SelectionNode::tableIntersection(Table table1, Table table2){
+	
+}
 
 Table ExpressionNode::Solve() {
     Table table;
@@ -667,72 +747,245 @@ Table SelectionNode::Solve() {//find what the next atomic expression is and then
 
     string conditionType;
     string conditionValue;
+	if (isSingleCondition){
+		if ((condition.find("==") == string::npos) && (condition.find("!=") == string::npos) && 
+		   (condition.find(">=") == string::npos) && (condition.find("<=") == string::npos)) {
+				conditionType = condition.substr(middleConditionKey,1);
+				conditionValue = condition.substr(middleConditionKey+1);
+		}
+		else {
+			 conditionType = condition.substr(middleConditionKey,2);
+			 conditionValue = condition.substr(middleConditionKey+2);
+		}
+	   
+		string conditionColumn = condition.substr(0, middleConditionKey);
+		
+		Table table;
+		string tableName;
+		switch (expression -> expressionType) {
+			  /*  0 = relation name
+			  1 = select
+			  2 = project
+			  3 = rename
+			  4 = Union
+			  5 = Difference
+			  6 = Product
+			  7 = join    */
+			case 0:
+				tableName = expression -> relationPointer -> name;
+				return engine.Selection(tableName, conditionColumn, conditionType, conditionValue);
 
-    if ((condition.find("==") == string::npos) && (condition.find("!=") == string::npos) && 
-       (condition.find(">=") == string::npos) && (condition.find("<=") == string::npos)) {
-            conditionType = condition.substr(middleConditionKey,1);
-            conditionValue = condition.substr(middleConditionKey+1);
-    }
-    else {
-         conditionType = condition.substr(middleConditionKey,2);
-         conditionValue = condition.substr(middleConditionKey+2);
-    }
-   
-    string conditionColumn = condition.substr(0, middleConditionKey);
+			break;
+
+			case 1:
+				table = expression -> selectionPointer -> Solve();
+				return engine.Selection(table, conditionColumn, conditionType, conditionValue);
+			break;
+
+			case 2:
+				table = expression -> projectionPointer -> Solve();
+				return engine.Selection(table, conditionColumn, conditionType, conditionValue);
+			break;
+
+			case 3:
+				table = expression -> renamePointer -> Solve();
+				return engine.Selection(table, conditionColumn, conditionType, conditionValue);
+			break;
+
+			case 4:
+				table = expression -> unionPointer -> Solve();
+				return engine.Selection(table, conditionColumn, conditionType, conditionValue);
+			break;
+
+			case 5:
+				table = expression -> differencePointer -> Solve();
+				return engine.Selection(table, conditionColumn, conditionType, conditionValue);
+			break;
+
+			case 6:
+				table = expression -> productPointer -> Solve();
+				return engine.Selection(table, conditionColumn, conditionType, conditionValue);
+			break;
+
+			case 7:
+				table = expression -> joinPointer -> Solve();
+				return engine.Selection(table, conditionColumn, conditionType, conditionValue);
+			break;
+	   
+		}
+	}
+	
+	else {//case where we have two conditions
+		
+		string conditionType1;
+		string conditionValue1;
+		string conditionType2;
+		string conditionValue2;
+		int middleConditionKey1 = findMiddleCondition(condStatement->leftCond);
+		 if ((condStatement->leftCond.find("==") == string::npos) && (condStatement->leftCond.find("!=") == string::npos) && 
+			(condStatement->leftCond.find(">=") == string::npos) && (condStatement->leftCond.find("<=") == string::npos)) {
+            conditionType1 = condStatement->leftCond.substr(middleConditionKey1,1);
+            conditionValue1 = condStatement->leftCond.substr(middleConditionKey1+1);
+		}
+		else {
+			 conditionType1 = condStatement->leftCond.substr(middleConditionKey1,2);
+			 conditionValue1 = condStatement->leftCond.substr(middleConditionKey1+2);
+		}
+		
+		string conditionColumn1 = condStatement->leftCond.substr(0, middleConditionKey1);
+		
+		
+		int middleConditionKey2 = findMiddleCondition(condStatement->rightCond);
+		 if ((condStatement->rightCond.find("==") == string::npos) && (condStatement->rightCond.find("!=") == string::npos) && 
+			(condStatement->rightCond.find(">=") == string::npos) && (condStatement->rightCond.find("<=") == string::npos)) {
+            conditionType2 = condStatement->rightCond.substr(middleConditionKey2,1);
+            conditionValue2 = condStatement->rightCond.substr(middleConditionKey2+1);
+		}
+		else {
+			 conditionType2 = condStatement->rightCond.substr(middleConditionKey2,2);
+			 conditionValue2 = condStatement->rightCond.substr(middleConditionKey2+2);
+		}
+	   
+		
+		string conditionColumn2 = condStatement->rightCond.substr(0, middleConditionKey2);
+		
+		
+		Table table1;
+		Table table2;
+		Table table4;
+		Table table5;
+		string tableName1;
+		string tableName2;
+		
+		if (condStatement->operation == "&&") {
+			tableName1 = expression -> relationPointer -> name;
+			table1 = engine.Selection(tableName1, conditionColumn1, conditionType1, conditionValue1);
+			
+			tableName2 = expression -> relationPointer -> name;
+			table2 = engine.Selection(tableName2, conditionColumn2, conditionType2, conditionValue2);
+			Table table3 = engine.SetUnion(table1, table2);
+			
+			engine.DisplayTable(table2);
+			
+			if (conditionType1 == "==") {
+				table4 = engine.Selection(tableName1, conditionColumn1, "!=", conditionValue1);
+				
+				
+			}
+			else if (conditionType1 == "!=") {
+				table4 = engine.Selection(tableName1, conditionColumn1, "==", conditionValue1);
+				
+			}
+			else if (conditionType1 == ">=") {
+				table4 = engine.Selection(tableName1, conditionColumn1, "<", conditionValue1);
+				
+			}
+			else if (conditionType1 == "<=") {
+				table4 = engine.Selection(tableName1, conditionColumn1, ">", conditionValue1);
+				
+			}
+			else if (conditionType1 == ">") {
+				table4 = engine.Selection(tableName1, conditionColumn1, "<=", conditionValue1);
+				
+			}
+			else if (conditionType1 == "<") {
+				table4 = engine.Selection(tableName1, conditionColumn1, ">=", conditionValue1);
+				
+			}
+			
+			if (conditionType2 == "==") {
+				table5 = engine.Selection(tableName2, conditionColumn2, "!=", conditionValue2);
+				
+				
+			}
+			else if (conditionType2 == "!=") {
+				table5 = engine.Selection(tableName2, conditionColumn2, "==", conditionValue2);
+				
+			}
+			else if (conditionType2 == ">=") {
+				table5 = engine.Selection(tableName2, conditionColumn2, "<", conditionValue2);
+				
+			}
+			else if (conditionType2 == "<=") {
+				table5 = engine.Selection(tableName2, conditionColumn2, ">", conditionValue2);
+				
+			}
+			else if (conditionType2 == ">") {
+				table5 = engine.Selection(tableName2, conditionColumn2, "<=", conditionValue2);
+				
+			}
+			else if (conditionType2 == "<") {
+				table5 = engine.Selection(tableName2, conditionColumn2, ">=", conditionValue2);
+				
+			}
+			
+			Table table6 = engine.SetUnion(table4, table5);
+			return engine.SetDifference(table3, table6);
+		
+		}
+		else if (condStatement->operation == "||") {
+			tableName1 = expression -> relationPointer -> name;
+			table1 = engine.Selection(tableName1, conditionColumn1, conditionType1, conditionValue1);
+			tableName2 = expression -> relationPointer -> name;
+			table2 = engine.Selection(tableName2, conditionColumn2, conditionType2, conditionValue2);
+			return engine.SetUnion(table1, table2);
+		}
+		
+		/*
+		switch (expression -> expressionType) {
+			  /*  0 = relation name
+			  1 = select
+			  2 = project
+			  3 = rename
+			  4 = Union
+			  5 = Difference
+			  6 = Product
+			  7 = join    *//*
+			case 0:
+				tableName = expression -> relationPointer -> name;
+				return engine.Selection(tableName, conditionColumn, conditionType, conditionValue);
+
+			break;
+
+			case 1:
+				table = expression -> selectionPointer -> Solve();
+				return engine.Selection(table, conditionColumn, conditionType, conditionValue);
+			break;
+
+			case 2:
+				table = expression -> projectionPointer -> Solve();
+				return engine.Selection(table, conditionColumn, conditionType, conditionValue);
+			break;
+
+			case 3:
+				table = expression -> renamePointer -> Solve();
+				return engine.Selection(table, conditionColumn, conditionType, conditionValue);
+			break;
+
+			case 4:
+				table = expression -> unionPointer -> Solve();
+				return engine.Selection(table, conditionColumn, conditionType, conditionValue);
+			break;
+
+			case 5:
+				table = expression -> differencePointer -> Solve();
+				return engine.Selection(table, conditionColumn, conditionType, conditionValue);
+			break;
+
+			case 6:
+				table = expression -> productPointer -> Solve();
+				return engine.Selection(table, conditionColumn, conditionType, conditionValue);
+			break;
+
+			case 7:
+				table = expression -> joinPointer -> Solve();
+				return engine.Selection(table, conditionColumn, conditionType, conditionValue);
+			break;
+		}
+			*/
     
-    Table table;
-    string tableName;
-    switch (expression -> expressionType) {
-          /*  0 = relation name
-          1 = select
-          2 = project
-          3 = rename
-          4 = Union
-          5 = Difference
-          6 = Product
-          7 = join    */
-        case 0:
-            tableName = expression -> relationPointer -> name;
-            return engine.Selection(tableName, conditionColumn, conditionType, conditionValue);
-
-        break;
-
-        case 1:
-            table = expression -> selectionPointer -> Solve();
-            return engine.Selection(table, conditionColumn, conditionType, conditionValue);
-        break;
-
-        case 2:
-            table = expression -> projectionPointer -> Solve();
-            return engine.Selection(table, conditionColumn, conditionType, conditionValue);
-        break;
-
-        case 3:
-            table = expression -> renamePointer -> Solve();
-            return engine.Selection(table, conditionColumn, conditionType, conditionValue);
-        break;
-
-        case 4:
-            table = expression -> unionPointer -> Solve();
-            return engine.Selection(table, conditionColumn, conditionType, conditionValue);
-        break;
-
-        case 5:
-            table = expression -> differencePointer -> Solve();
-            return engine.Selection(table, conditionColumn, conditionType, conditionValue);
-        break;
-
-        case 6:
-            table = expression -> productPointer -> Solve();
-            return engine.Selection(table, conditionColumn, conditionType, conditionValue);
-        break;
-
-        case 7:
-            table = expression -> joinPointer -> Solve();
-            return engine.Selection(table, conditionColumn, conditionType, conditionValue);
-        break;
-   
-    }
+	
+	}
 }
 
 Table ProjectionNode::Solve() {
