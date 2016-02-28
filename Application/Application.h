@@ -285,13 +285,15 @@ void InStock(string storeNumber, string projectName) {
 	parser.Evaluate(input);
 
 	input = "In_Stock <- project (Name, Brand, Aisle, Barcode) temp1";
-	parser.Evaluate(input);
+	Table inStock = parser.EvaluateTable(input);
 
-	parser.Evaluate("SHOW In_Stock");
+	cout << endl << "Items in stock at store number: " << storeNumber << endl;
+	
+	for (auto i : inStock.table[0])
+		cout << i << endl;
 
 	parser.Evaluate("CLOSE temp");
 	parser.Evaluate("CLOSE temp1");
-	parser.Evaluate("CLOSE In_Stock");
 }
 
 void ItemLocated(string barcode, string projectName) {
@@ -303,13 +305,16 @@ void ItemLocated(string barcode, string projectName) {
 
 
 	input = "Item_Location <- project (Name, Location, StoreID) temp1";
-	parser.Evaluate(input);
+	Table itemLocated = parser.EvaluateTable(input);
 
-	parser.Evaluate("SHOW Item_Location");
+	cout << endl << "Item Number " << barcode << " is located at the following stores" << endl;
+	
+	for (auto i : itemLocated.table[0])
+		cout << i << endl;
+
 
 	parser.Evaluate("CLOSE temp");
 	parser.Evaluate("CLOSE temp1");
-	parser.Evaluate("CLOSE Item_Location");
 }
 
 

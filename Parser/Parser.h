@@ -26,6 +26,11 @@ public:
 	void Delete(string input); //3
 	void Update(string input); //4
 
+  Table EvaluateTable(string expression);
+
+  Table QueryTable(string input);
+
+
 };
 
 Parser parser;
@@ -238,6 +243,14 @@ void Parser::Evaluate(string expression){
     
 }
 
+Table Parser::EvaluateTable(string expression) {
+    expression = removeWhiteSpace(expression);
+    expression = removeSemiColon(expression);
+
+    return QueryTable(expression);
+
+}
+
 void Parser::Query(string input) {
 	// input = removeWhiteSpace(input);
 	size_t position = 0;
@@ -246,6 +259,16 @@ void Parser::Query(string input) {
 	string expression = input.substr(position+2);
 	queryNode query(relationName, expression);
 	query.Evaluate();
+}
+
+Table Parser::QueryTable(string input) {
+  // input = removeWhiteSpace(input);
+  size_t position = 0;
+  position = input.find("<-");
+  string relationName = input.substr(0, position);
+  string expression = input.substr(position+2);
+  queryNode query(relationName, expression);
+  return query.Solve();
 }
 
 
