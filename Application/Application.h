@@ -19,6 +19,7 @@ public:
 	void TableUpdate(string projectName);
 	void TableDelete(string projectName);
 	void InStock(string storeNumber, string projectName);
+	void ItemLocated(string barcode, string projectName);
 };
 
 // create a table warehouses
@@ -28,7 +29,7 @@ void CreateNewProject(string name){
 	parser.Evaluate("CREATE TABLE " + name + "Warehouse (Name VARCHAR(50), Location VARCHAR(200), IDNumber INTEGER) PRIMARY KEY (IDNumber)");
 
 	// create a table stores
-	parser.Evaluate("CREATE TABLE " + name + "Store (Name VARCHAR(100), Location VARCHAR(200), IDNumber INTEGER) PRIMARY KEY (IDNumber)");
+	parser.Evaluate("CREATE TABLE " + name + "Store (Name VARCHAR(100), Location VARCHAR(200), StoreID INTEGER) PRIMARY KEY (IDNumber)");
 
 	// create a table items
 	parser.Evaluate("CREATE TABLE " + name + "Item (Name VARCHAR(100), Brand VARCHAR(50), Aisle VARCHAR(100), Barcode INTEGER) PRIMARY KEY (Barcode)");
@@ -246,14 +247,32 @@ void InStock(string storeNumber, string projectName) {
 	input = "temp1 <- select(StoreID==" + storeNumber + ") temp";
 	parser.Evaluate(input);
 
-	input = "temp2 <- project (Name, Brand, Aisle, Barcode) temp1";
+	input = "In_Stock <- project (Name, Brand, Aisle, Barcode) temp1";
 	parser.Evaluate(input);
 
-	parser.Evaluate("SHOW temp2");
+	parser.Evaluate("SHOW In_Stock");
 
 	parser.Evaluate("CLOSE temp");
 	parser.Evaluate("CLOSE temp1");
-	parser.Evaluate("CLOSE temp2");
+	parser.Evaluate("CLOSE In_Stock");
+}
+
+void ItemLocated(string barcode, string projectName) {
+	string input = "temp <- " + projectName + "Store JOIN " + projectName + "StoreItemLink";
+	parser.Evaluate(input);
+
+	input = "temp1 <- select(Barcode==" + barcode + ") temp";
+	parser.Evaluate(input);
+
+
+	input = "Item_Location <- project (Name, Location, StoreID) temp1";
+	parser.Evaluate(input);
+
+	parser.Evaluate("SHOW Item_Location");
+
+	parser.Evaluate("CLOSE temp");
+	parser.Evaluate("CLOSE temp1");
+	parser.Evaluate("CLOSE Item_Location");
 }
 
 
