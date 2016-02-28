@@ -278,22 +278,26 @@ void TableDelete(string projectName) {
 }
 
 void InStock(string storeNumber, string projectName) {
-	string input = "temp <- " + projectName + "Item JOIN " + projectName + "StoreItemLink";
-	parser.Evaluate(input);
-
-	input = "temp1 <- select(StoreID==" + storeNumber + ") temp";
-	parser.Evaluate(input);
-
-	input = "In_Stock <- project (Name, Brand, Aisle, Barcode) temp1";
+	string input = "In_Stock <- project (Name, Brand, Aisle, Barcode) (select(StoreID==" + storeNumber + ")  (" + projectName + "Item JOIN " + projectName + "StoreItemLink))";
 	Table inStock = parser.EvaluateTable(input);
 
-	cout << endl << "Items in stock at store number: " << storeNumber << endl;
+	cout << endl << "Items in stock at store number: " << storeNumber << endl << endl;
 	
-	for (auto i : inStock.table[0])
-		cout << i << endl;
+	cout << setw(30) << "Name";
+	cout << setw(30) << "Brand";
+	cout << setw(30) << "Aisle";
+	cout << setw(30) << "Barcode" << endl;
+	cout << setfill('-') << setw(120) <<  "" << endl;
 
-	parser.Evaluate("CLOSE temp");
-	parser.Evaluate("CLOSE temp1");
+	cout << setfill(' ');
+
+	for (int i=0; i<inStock.table[0].size(); i++) {
+		for (int j=0; j<inStock.table.size(); j++) {
+			cout << setw(30) << inStock.table[j][i];
+		}
+		cout << endl;
+	}
+
 }
 
 void ItemLocated(string barcode, string projectName) {
@@ -307,10 +311,21 @@ void ItemLocated(string barcode, string projectName) {
 	input = "Item_Location <- project (Name, Location, StoreID) temp1";
 	Table itemLocated = parser.EvaluateTable(input);
 
-	cout << endl << "Item Number " << barcode << " is located at the following stores" << endl;
+	cout << endl << "Item Number " << barcode << " is located at the following stores" << endl << endl;
+
+	cout << setw(30) << "Name";
+	cout << setw(30) << "Location";
+	cout << setw(30) << "Store ID" << endl;
+	cout << setfill('-') << setw(90) <<  "" << endl;
+
+	cout << setfill(' ');
 	
-	for (auto i : itemLocated.table[0])
-		cout << i << endl;
+	for (int i=0; i<itemLocated.table[0].size(); i++) {
+		for (int j=0; j<itemLocated.table.size(); j++) {
+			cout << setw(30) << itemLocated.table[j][i];
+		}
+		cout << endl;
+	}
 
 
 	parser.Evaluate("CLOSE temp");
