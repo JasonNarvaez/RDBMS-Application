@@ -323,7 +323,7 @@ void Table::UpdateEntry (string columnnName, vector <int> rows, string data) {
 Delete rows in the table
 ------------------------------------------------------*/
 void Table::DeleteEntry (vector <int> rows) {
-	if (rows.size() == table[0][0].size()) {
+	if (rows.size() == table[0].size()) {
 		for (int i=0; i<rows.size()-1; i++) {
 			int row = rows[i];
 			for  (int j=0; j<table.size(); j++) {

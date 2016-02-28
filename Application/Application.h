@@ -38,7 +38,7 @@ void CreateNewProject(string name){
 	parser.Evaluate("CREATE TABLE " + name + "WarehouseStoreLink (StoreID INTEGER, WarehouseID INTEGER) PRIMARY KEY (StoreID, WarehouseID)");
 
 	// create a Table to link the item to the store
-	parser.Evaluate("CREATE TABLE " + name + "StoreItemLink (StoreID INTEGER, Barcode INTEGER) PRIMARY KEY (StoreID, ItemID)");
+	parser.Evaluate("CREATE TABLE " + name + "StoreItemLink (StoreID INTEGER, Barcode INTEGER) PRIMARY KEY (StoreID, Barcode)");
 
 	cout << "\nNew Project for " + name + " Created!\n\n";
 }
@@ -237,6 +237,43 @@ void TableUpdate(string projectName){
 }
 
 void TableDelete(string projectName) {
+
+	//variables
+	int input;
+	string id, barcode;
+	char name[50], address[200], warehouse[50], brand[50], aisle[50];
+
+	// cannot do the commas, does not keep spaces
+	cout << "What would you like to delete?\n Warehouse(0)\n Store(1)\n Item(2)\n";
+	cin >> input;
+
+	switch(input){
+		case 0: // deletes warehouse table
+			cout << "Please type the ID of the warehouse you wish to delete\n";
+			parser.Evaluate("SHOW " + projectName + "Warehouse");
+			cin >> id;
+			parser.Evaluate("DELETE FROM " + projectName + "Warehouse WHERE IDNumber ==" + id);
+			parser.Evaluate("DELETE FROM " + projectName + "WarehouseStoreLink WHERE IDNumber ==" + id);
+			break;
+		case 1: // deletes store table
+			cout << "Please type the ID of the Store you wish to delete\n";
+			parser.Evaluate("SHOW " + projectName + "Store");
+			cin >> id;
+			parser.Evaluate("DELETE FROM " + projectName + "StoreItemLink WHERE StoreID==" + id);
+			parser.Evaluate("DELETE FROM " + projectName + "WarehouseStoreLink WHERE StoreID==" + id);
+			parser.Evaluate("DELETE FROM " + projectName + "Store WHERE StoreID ==" + id);
+			break;
+		case 2: // deletes item table
+			cout << "Please type the Barcode of the Item you wish to delete\n";
+			parser.Evaluate("SHOW " + projectName + "Item");
+			cin >> id;
+			parser.Evaluate("DELETE FROM " + projectName + "StoreItemLink WHERE Barcode ==" + id);
+			parser.Evaluate("DELETE FROM " + projectName + "Item WHERE Barcode ==" + id);
+			break;
+		default:
+			cout << "Incorrect input";
+			break;
+	}
 
 }
 
