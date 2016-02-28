@@ -360,8 +360,8 @@ Table Table::Selection (string conditionColum, string conditionType, string cond
 	Table selectionTable(newName, pk);
 
 	for (int i=0; i<header.size(); i++) {
-			selectionTable.AddColumn(header[i].name, header[i].type);
-		}
+		selectionTable.AddColumn(header[i].name, header[i].type);
+	}
 
 	for (int i=0; i<rows.size(); i++) {
 		vector <string> newData;
@@ -623,7 +623,6 @@ Table Table::CrossProduct (Table table2){
 }
 
 Table Table::NaturalJoin (Table table2){
-
 	string newName = name + " |><| " + table2.name;
 	vector <string> pk = {""};
 	Table NatJoinTable (newName, pk);
@@ -642,6 +641,8 @@ Table Table::NaturalJoin (Table table2){
 			}
 		}
 	}
+
+	int table2Column = table2.FindColumnKey(commonName);
 	
 	for (int i=0; i<header.size()-1; i++) {//add one less column since 
 		NatJoinTable.AddColumn(header[i].name, header[i].type);
@@ -649,12 +650,13 @@ Table Table::NaturalJoin (Table table2){
 	for (int i=0; i<table2.header.size(); i++) {
 		NatJoinTable.AddColumn(table2.header[i].name, table2.header[i].type);
 	}
+
 	if(isCompatible){
 		
 		for (int i=0; i<table[0].size(); i++) {//for the length of table1
 			vector <string> testData1;
 			string currentAttribute = table[table.size()-1][i];//the current attribute is in last column of table1
-			
+
 			for (int j=0; j<table.size()-1; j++) {//get rid of the last column in table1 to avoid duplicate columns w/ table2
 				testData1.push_back(table[j][i]);
 			}
@@ -664,7 +666,7 @@ Table Table::NaturalJoin (Table table2){
 				vector <string> testData2;
 				vector <string>::iterator it;
 				bool isFound = false;
-				string attribute2 = table2.table[0][n];//attribute on the left-most column
+				string attribute2 = table2.table[table2Column][n];//attribute on the left-most column
 				
 				if (currentAttribute == attribute2){
 					isFound = true;

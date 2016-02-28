@@ -183,7 +183,7 @@ void Engine::DeleteTable (string tableName) {
 			allTables[0].name  = "---------";
 		}
 		else {
-			allTables.erase(allTables.begin() + (key-1));
+			allTables.erase(allTables.begin() + (key));
 		}
 	}
 }
@@ -346,8 +346,6 @@ Table Engine::Selection (string tableName, string conditionColum, string conditi
 
 Table Engine::Selection (Table table, string conditionColum, string conditionType, string condition) {
 	Table selectionTable = table.Selection(conditionColum, conditionType, condition);
-	cout << "selection table1 " << selectionTable.name << endl;
-
 	return selectionTable;
 }
 

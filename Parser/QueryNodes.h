@@ -681,7 +681,7 @@ void queryNode::Display() {
 }
 
 void queryNode::Evaluate() {
-  expression -> Evaluate(); 
+  expression -> Evaluate();
   engine.CreateTable(relationName -> name, expression -> Solve());
 }
 

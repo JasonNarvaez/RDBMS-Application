@@ -177,6 +177,7 @@ void Parser::insert(string expression){
 }  
 
 void Parser::close(string tableName){
+  tableName = removeWhiteSpace(tableName);
 	tableName =  tableName.erase(0,5);
 	engine.DeleteTable(tableName);
 }
@@ -233,7 +234,7 @@ void Parser::Evaluate(string expression){
     else if (expression == "") {
 
     }
-    else cerr << "that input is not valid" << endl;
+    else cerr << "the input \"" << expression <<"\" is not valid" << endl;
     
 }
 
