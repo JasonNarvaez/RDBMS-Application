@@ -8,6 +8,7 @@
 using namespace std;
 
 class Application {
+
 public:
 	void CreateNewProject(string name);  //creates a new project	
 	void ShowProject(string projectName);
@@ -17,6 +18,7 @@ public:
 	void SingleTableSave(string projectName);
 	void TableUpdate(string projectName);
 	void TableDelete(string projectName);
+	void InStock(string storeNumber, string projectName);
 };
 
 // create a table warehouses
@@ -35,7 +37,7 @@ void CreateNewProject(string name){
 	parser.Evaluate("CREATE TABLE " + name + "WarehouseStoreLink (StoreID INTEGER, WarehouseID INTEGER) PRIMARY KEY (StoreID, WarehouseID)");
 
 	// create a Table to link the item to the store
-	parser.Evaluate("CREATE TABLE " + name + "StoreItemLink (StoreID INTEGER, ItemID INTEGER) PRIMARY KEY (StoreID, ItemID)");
+	parser.Evaluate("CREATE TABLE " + name + "StoreItemLink (StoreID INTEGER, Barcode INTEGER) PRIMARY KEY (StoreID, ItemID)");
 
 	cout << "\nNew Project for " + name + " Created!\n\n";
 }
@@ -235,6 +237,23 @@ void TableUpdate(string projectName){
 
 void TableDelete(string projectName) {
 
+}
+
+void InStock(string storeNumber, string projectName) {
+	string input = "temp <- " + projectName + "Item JOIN " + projectName + "StoreItemLink";
+	parser.Evaluate(input);
+
+	input = "temp1 <- select(StoreID==" + storeNumber + ") temp";
+	parser.Evaluate(input);
+
+	input = "temp2 <- project (Name, Brand, Aisle, Barcode) temp1";
+	parser.Evaluate(input);
+
+	parser.Evaluate("SHOW temp2");
+
+	parser.Evaluate("CLOSE temp");
+	parser.Evaluate("CLOSE temp1");
+	parser.Evaluate("CLOSE temp2");
 }
 
 
