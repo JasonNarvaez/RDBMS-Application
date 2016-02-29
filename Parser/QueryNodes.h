@@ -248,8 +248,7 @@ class ConditionStatement {
 	string leftCond;
 	string rightCond;
 	string operation;//operation between the two sides
-	//ConditionStatement* nestedLeft;
-	//ConditionStatement* nestedRight;
+	
 	ConditionStatement(string left, string right, string op): leftCond(left), rightCond(right), operation(op) { }
 	
 	bool isEmpty() { if (leftCond.empty()&&rightCond.empty()) return true; }
@@ -261,30 +260,6 @@ void ConditionStatement::evaluateCondition(){
 	string rightTemp;
 	leftCond = removeOuterParenthesis(leftCond);
 	rightCond = removeOuterParenthesis(rightCond);
-	/*
-	if (operation.find("&&") != string::npos){
-		cout << "&& condition parsed" << endl;
-		leftTemp = removeOuterParenthesis(leftCond);
-		rightTemp = removeOuterParenthesis(rightCond);
-		cout << "left cond: " << leftTemp << endl;
-		cout << "right cond: " << rightTemp << endl;
-		leftCond = leftTemp;
-		rightCond = rightTemp;
-		
-	}
-	else if (operation.find("||") != string::npos){
-		cout << "|| condition parsed" << endl;
-		leftTemp = removeOuterParenthesis(leftCond);
-		rightTemp = removeOuterParenthesis(rightCond);
-		cout << "left cond: " << leftTemp << endl;
-		cout << "right cond: " << rightTemp << endl;
-		leftCond = leftTemp;
-		rightCond = rightTemp;
-	}
-	else {
-		cout << "error parsing conditon" << endl;
-	}
-	*/
 }
 
 /*------------------------------
@@ -319,7 +294,7 @@ class SelectionNode {
 			expression = new ExpressionNode(_expression);
 			expression -> Evaluate();
 		}
-		else {
+		else {//we have multiple conditions
 			int lastParenIndex = findLastParenthesis(selectExpression);
 			string entireCondition = selectExpression.substr(start,lastParenIndex-start+1);
 			isSingleCondition = false;
@@ -822,7 +797,8 @@ Table SelectionNode::Solve() {//find what the next atomic expression is and then
 		string conditionType2;
 		string conditionValue2;
 		int middleConditionKey1 = findMiddleCondition(condStatement->leftCond);
-		 if ((condStatement->leftCond.find("==") == string::npos) && (condStatement->leftCond.find("!=") == string::npos) && 
+		
+		if ((condStatement->leftCond.find("==") == string::npos) && (condStatement->leftCond.find("!=") == string::npos) && 
 			(condStatement->leftCond.find(">=") == string::npos) && (condStatement->leftCond.find("<=") == string::npos)) {
             conditionType1 = condStatement->leftCond.substr(middleConditionKey1,1);
             conditionValue1 = condStatement->leftCond.substr(middleConditionKey1+1);
@@ -834,9 +810,9 @@ Table SelectionNode::Solve() {//find what the next atomic expression is and then
 		
 		string conditionColumn1 = condStatement->leftCond.substr(0, middleConditionKey1);
 		
-		
 		int middleConditionKey2 = findMiddleCondition(condStatement->rightCond);
-		 if ((condStatement->rightCond.find("==") == string::npos) && (condStatement->rightCond.find("!=") == string::npos) && 
+		
+		if ((condStatement->rightCond.find("==") == string::npos) && (condStatement->rightCond.find("!=") == string::npos) && 
 			(condStatement->rightCond.find(">=") == string::npos) && (condStatement->rightCond.find("<=") == string::npos)) {
             conditionType2 = condStatement->rightCond.substr(middleConditionKey2,1);
             conditionValue2 = condStatement->rightCond.substr(middleConditionKey2+1);
@@ -846,9 +822,7 @@ Table SelectionNode::Solve() {//find what the next atomic expression is and then
 			 conditionValue2 = condStatement->rightCond.substr(middleConditionKey2+2);
 		}
 	   
-		
 		string conditionColumn2 = condStatement->rightCond.substr(0, middleConditionKey2);
-		
 		
 		Table table1;
 		Table table2;
@@ -857,7 +831,7 @@ Table SelectionNode::Solve() {//find what the next atomic expression is and then
 		string tableName1;
 		string tableName2;
 		
-		if (condStatement->operation == "&&") {
+		if (condStatement->operation == "&&") {//compute the intersection of the two conditions
 			tableName1 = expression -> relationPointer -> name;
 			table1 = engine.Selection(tableName1, conditionColumn1, conditionType1, conditionValue1);
 			
@@ -867,7 +841,7 @@ Table SelectionNode::Solve() {//find what the next atomic expression is and then
 			
 			engine.DisplayTable(table2);
 			
-			if (conditionType1 == "==") {
+			if (conditionType1 == "==") {//
 				table4 = engine.Selection(tableName1, conditionColumn1, "!=", conditionValue1);
 				
 				
@@ -919,11 +893,12 @@ Table SelectionNode::Solve() {//find what the next atomic expression is and then
 				
 			}
 			
+			//table 6 is the union between the negation of the passed in conditions
 			Table table6 = engine.SetUnion(table4, table5);
-			return engine.SetDifference(table3, table6);
+			return engine.SetDifference(table3, table6);//set difference to get the intersection of two conditions
 		
 		}
-		else if (condStatement->operation == "||") {
+		else if (condStatement->operation == "||") {//execute union between two conditions
 			tableName1 = expression -> relationPointer -> name;
 			table1 = engine.Selection(tableName1, conditionColumn1, conditionType1, conditionValue1);
 			tableName2 = expression -> relationPointer -> name;
