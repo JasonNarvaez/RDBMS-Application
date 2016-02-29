@@ -8,4 +8,4 @@ run:
 	./main
 	
 c:
-	rm *.o main
+	rm main
