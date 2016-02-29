@@ -29,12 +29,49 @@
 			**asks for name twice for error**
 
 	void LinkProject(string projectName);
+			0: item store
+				takes Barcode
+				takes ID of a store 
+				table shows before each input is accepted 
+				then the insert and show happen
+			1: store warehouse
+				takes ID of a warehouse
+				takes ID of a store 
+				table shows before each input is accepted 
+				then the insert and show happen
+			Default:
+				Print “not acceptable choice”
+
 	void SingleTableSave(string projectName);
+		saves some aspect of the project
+			0 – save warehouse
+			1 – save store table
+			2 – save item table
+			3 – save warehouse roster
+			4 – save store inventory
+	  default - "issue with option"
+
 	void TableUpdate(string projectName);
+		Updates a file, shows a table and takes the id for the object
+			0 – saves warehouse table
+			1 – saves store table
+			2 – saves item table
+	  Default – “incorrect input”
+
 	void TableDelete(string projectName);
+		Delete table 
+			0 – deletes warehouse
+			1 – Deletes store table
+			2 – Deletes item
+	  Default - “incorrect input”
+
 	void InStock(string storeNumber, string projectName);
+		Prints items in a store
 	void ItemLocated(string barcode, string projectName);
+		Prints where an item is located
 	void WarehouseSupplies(string warehouseID, string projectName);
+		Prints where a warehouse stocks
+
 */
 #include <vector>
 #include <iostream>
