@@ -10,7 +10,11 @@ using namespace std;
 int main () {
 
 	//parser.openFile();
-	parser.Evaluate();
-
+	while (cin.good()){
+	string command;
+	getline(cin, command);
+	parser.Evaluate(command);
+	
+	}
 
 }

@@ -9,7 +9,7 @@ SHOW animals;
 UPDATE animals SET name="Dave" WHERE kind=="cat";
 SHOW animals;
 
-DELETE FROM animals WHERE kind=="bird";
+DELETE FROM animals WHERE kind=="bird"||name=="Snoopy";
 SHOW animals;
 
 dogs <- select (kind == "dog") animals;
