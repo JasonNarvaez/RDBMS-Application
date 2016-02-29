@@ -10,10 +10,10 @@ https://docs.google.com/document/d/1jCeiHIZrsFMUjXuWPWD7mqUyc7AsgWJRsMEUlqFJPvo/
 
 <h3>Compile / Run Instructions</h3>
 <h4>Test the Parser/Engine</h4>
-First navigate to the folder "Parser"
-<strong>Compile: </strong> make
-<strong>Run: </strong> make run
+First navigate to the folder "Parser" <br>
+<strong>Compile: </strong> make <br>
+<strong>Run: </strong> make run <br>
 <h4>Test application</h4>
-First navigate to the folder "Application"
-<strong>Compile: </strong> make
-<strong>Run: </strong> make run
+First navigate to the folder "Application" <br>
+<strong>Compile: </strong> make <br>
+<strong>Run: </strong> make run <br>
