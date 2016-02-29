@@ -316,7 +316,47 @@ void Parser::Delete(string input) {
 	}
 	else {//double condition
 		if (input.find("&&") != string::npos) {
+			string condition = input;
+			int middleConditionKey = findMiddleCondition(condition); 
+			int operatorIndex = condition.find("&&");//contains the index of && or ||
+			string conditionType1;
+			string conditionValue1;
+			string conditionType2;
+			string conditionValue2;
+			
+			
+			if ((condition.find("==") == string::npos) && (condition.find("!=") == string::npos) && 
+			   (condition.find(">=") == string::npos) && (condition.find("<=") == string::npos)) {
+					conditionType1 = condition.substr(middleConditionKey,1);
+					conditionValue1 = condition.substr(middleConditionKey+1,operatorIndex-middleConditionKey-1); 
+			}
+			else {
+				 conditionType1 = condition.substr(middleConditionKey,2);
+				 conditionValue1 = condition.substr(middleConditionKey+2,operatorIndex-middleConditionKey-2);
+			}
+			cout << operatorIndex << middleConditionKey << endl;
+			string conditionColumn1 = condition.substr(0, middleConditionKey); 
+			
 		
+			string rightSide = condition.substr(operatorIndex+2);
+			middleConditionKey = findMiddleCondition(rightSide);//
+			
+			
+			if ((rightSide.find("==") == string::npos) && (rightSide.find("!=") == string::npos) && 
+			   (rightSide.find(">=") == string::npos) && (rightSide.find("<=") == string::npos)) {
+					conditionType2 = rightSide.substr(middleConditionKey,1);
+					conditionValue2 = rightSide.substr(middleConditionKey+1); 
+			}
+			else {
+				 conditionType2 = rightSide.substr(middleConditionKey,2);
+				 conditionValue2 = rightSide.substr(middleConditionKey+2);
+			}
+			string conditionColumn2 = rightSide.substr(0, middleConditionKey); 
+			
+			
+			
+			engine.DeleteEntry(tableName, conditionColumn1, conditionType1, conditionValue1);
+			engine.DeleteEntry(tableName, conditionColumn2, conditionType2, conditionValue2);
 		}
 		else if (input.find("||") != string::npos) {
 			string condition = input;
@@ -412,7 +452,46 @@ void Parser::Update(string input) {
 	}
 	else {
 		if (input.find("&&") != string::npos) {
+			string condition = input;
+			int middleConditionKey = findMiddleCondition(condition); 
+			int operatorIndex = condition.find("&&");//contains the index of && or ||
+			string conditionType1;
+			string conditionValue1;
+			string conditionType2;
+			string conditionValue2;
+			
+			
+			if ((condition.find("==") == string::npos) && (condition.find("!=") == string::npos) && 
+			   (condition.find(">=") == string::npos) && (condition.find("<=") == string::npos)) {
+					conditionType1 = condition.substr(middleConditionKey,1);
+					conditionValue1 = condition.substr(middleConditionKey+1,operatorIndex-middleConditionKey-1); 
+			}
+			else {
+				 conditionType1 = condition.substr(middleConditionKey,2);
+				 conditionValue1 = condition.substr(middleConditionKey+2,operatorIndex-middleConditionKey-2);
+			}
+			
+			string conditionColumn1 = condition.substr(0, middleConditionKey); 
+			
 		
+			string rightSide = condition.substr(operatorIndex+2);
+			middleConditionKey = findMiddleCondition(rightSide);//
+			
+			
+			if ((rightSide.find("==") == string::npos) && (rightSide.find("!=") == string::npos) && 
+			   (rightSide.find(">=") == string::npos) && (rightSide.find("<=") == string::npos)) {
+					conditionType2 = rightSide.substr(middleConditionKey,1);
+					conditionValue2 = rightSide.substr(middleConditionKey+1); 
+			}
+			else {
+				 conditionType2 = rightSide.substr(middleConditionKey,2);
+				 conditionValue2 = rightSide.substr(middleConditionKey+2);
+			}
+			string conditionColumn2 = rightSide.substr(0, middleConditionKey); 
+			
+			
+			engine.UpdateEntry(tableName, newValue, columnName, conditionColumn1, conditionType1, conditionValue1);
+			engine.UpdateEntry(tableName, newValue, columnName, conditionColumn2, conditionType2, conditionValue2);
 		}
 		else if (input.find("||") != string::npos) {
 			string condition = input;
