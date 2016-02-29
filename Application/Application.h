@@ -1,4 +1,41 @@
 //Application.h
+
+
+/*
+	void CreateNewProject(string name)
+		takes a name and creates a new project
+
+	void ShowProject(string projectName);
+		takes a prexisting project name and displays
+		the name of project tables
+
+	int OpenProject(string projectName);
+		opens a prexisting project file
+		if any part of the project fails the
+		project does not open
+
+	void ProjectInsert(string projectName);
+		inserts an object
+			0 - warehouse
+				asks for name, address, ID
+				inserts and shows result
+			1 - store
+				asks for name, address, ID
+				inserts and shows result
+			2 - item
+				asks for name, brand, aisle, barcode
+	  default - prints "not acceptable choice"
+
+			**asks for name twice for error**
+
+	void LinkProject(string projectName);
+	void SingleTableSave(string projectName);
+	void TableUpdate(string projectName);
+	void TableDelete(string projectName);
+	void InStock(string storeNumber, string projectName);
+	void ItemLocated(string barcode, string projectName);
+	void WarehouseSupplies(string warehouseID, string projectName);
+*/
 #include <vector>
 #include <iostream>
 #include <stdlib.h>
