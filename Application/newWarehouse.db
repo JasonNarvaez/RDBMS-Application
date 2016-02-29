@@ -1,3 +1,0 @@
--|newWarehouse|IDNumber
-<|Name,VARCHAR(50)|Location,VARCHAR(200)|IDNumber,INTEGER|
-*|NULL|NULL|NULL|

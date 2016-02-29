@@ -1,5 +1,0 @@
--|test_stuffStoreItemLink|StoreID|Barcode
-<|StoreID,INTEGER|Barcode,INTEGER|
-*|12|123|
-*|15|111|
-*|15|123|

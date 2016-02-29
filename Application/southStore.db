@@ -1,3 +1,0 @@
--|southStore|IDNumber
-<|Name,VARCHAR(100)|Location,VARCHAR(200)|IDNumber,INTEGER|
-*|"HEB"|"TOWN"|12|

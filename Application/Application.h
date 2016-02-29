@@ -20,16 +20,17 @@ public:
 	void TableDelete(string projectName);
 	void InStock(string storeNumber, string projectName);
 	void ItemLocated(string barcode, string projectName);
+	void WarehouseSupplies(string warehouseID, string projectName);
 };
 
 // create a table warehouses
 void CreateNewProject(string name){
 
 	// create warehouse table
-	parser.Evaluate("CREATE TABLE " + name + "Warehouse (Name VARCHAR(50), Location VARCHAR(200), IDNumber INTEGER) PRIMARY KEY (IDNumber)");
+	parser.Evaluate("CREATE TABLE " + name + "Warehouse (Name VARCHAR(50), Location VARCHAR(200), WarehouseID INTEGER) PRIMARY KEY (WarehouseID)");
 
 	// create a table stores
-	parser.Evaluate("CREATE TABLE " + name + "Store (Name VARCHAR(100), Location VARCHAR(200), StoreID INTEGER) PRIMARY KEY (IDNumber)");
+	parser.Evaluate("CREATE TABLE " + name + "Store (Name VARCHAR(100), Location VARCHAR(200), StoreID INTEGER) PRIMARY KEY (StoreID)");
 
 	// create a table items
 	parser.Evaluate("CREATE TABLE " + name + "Item (Name VARCHAR(100), Brand VARCHAR(50), Aisle VARCHAR(100), Barcode INTEGER) PRIMARY KEY (Barcode)");
@@ -165,7 +166,7 @@ void LinkProject(string projectName){
 			parser.Evaluate("SHOW " + projectName + "Store");
 			cin >> storeID;
 
-			parser.Evaluate("INSERT INTO " + projectName + "WarehouseStoreLink VALUES FROM (" + warehouseID + "," + storeID + ")");
+			parser.Evaluate("INSERT INTO " + projectName + "WarehouseStoreLink VALUES FROM (" + storeID + "," + warehouseID + ")");
 			parser.Evaluate("SHOW " + projectName + "WarehouseStoreLink");
 
 			break;
@@ -301,14 +302,7 @@ void InStock(string storeNumber, string projectName) {
 }
 
 void ItemLocated(string barcode, string projectName) {
-	string input = "temp <- " + projectName + "Store JOIN " + projectName + "StoreItemLink";
-	parser.Evaluate(input);
-
-	input = "temp1 <- select(Barcode==" + barcode + ") temp";
-	parser.Evaluate(input);
-
-
-	input = "Item_Location <- project (Name, Location, StoreID) temp1";
+	string input = "Item_Location <- project (Name, Location, StoreID) (select(Barcode==" + barcode + ") (" + projectName + "Store JOIN " + projectName + "StoreItemLink))";
 	Table itemLocated = parser.EvaluateTable(input);
 
 	cout << endl << "Item Number " << barcode << " is located at the following stores" << endl << endl;
@@ -326,12 +320,28 @@ void ItemLocated(string barcode, string projectName) {
 		}
 		cout << endl;
 	}
-
-
-	parser.Evaluate("CLOSE temp");
-	parser.Evaluate("CLOSE temp1");
 }
 
+void WarehouseSupplies(string warehouseID, string projectName) {
+	string input = "warehouseSupplies <- project (Name, Location, WarehouseID) (select(WarehouseID==" + warehouseID + ") (" + projectName + "Warehouse JOIN " + projectName + "WarehouseStoreLink))";
+	Table warehouseSupplies = parser.EvaluateTable(input);
+
+	cout << endl << "Warehouse number " << warehouseID << " stocks the following stores" << endl << endl;
+
+	cout << setw(30) << "Name";
+	cout << setw(30) << "Location";
+	cout << setw(30) << "Warehouse ID" << endl;
+	cout << setfill('-') << setw(90) <<  "" << endl;
+
+	cout << setfill(' ');
+	
+	for (int i=0; i<warehouseSupplies.table[0].size(); i++) {
+		for (int j=0; j<warehouseSupplies.table.size(); j++) {
+			cout << setw(30) << warehouseSupplies.table[j][i];
+		}
+		cout << endl;
+	}
+}
 
 
 

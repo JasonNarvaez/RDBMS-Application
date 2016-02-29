@@ -1,3 +1,3 @@
--|testStore|IDNumber
+-|testStore|StoreID
 <|Name,VARCHAR(100)|Location,VARCHAR(200)|StoreID,INTEGER|
 *|"heb"|"town"|12|

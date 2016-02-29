@@ -75,7 +75,7 @@ int main(){
 	bool breakvar = false; //to break from while and end program
 	while(breakvar == false){
 
-		cout << "\nMenu:\n To show your tables, type 1\n to add a warehouse, store, or item, type 2\n to link an item to a store or link a store to a warehouse,type 3\n to Delete, type 4\n to Update a table, type 5\n to Save a table, type 6\n to make a handwritten Query, type 7\n to check what is in stock at a store, type 8\n to check which stores a product is located, type 9\n to exit the program and save your progress, type 0\n";
+		cout << "\nMenu:\n To show your tables, type 1\n to add a warehouse, store, or item, type 2\n to link an item to a store or link a store to a warehouse,type 3\n to Delete, type 4\n to Update a table, type 5\n to Save a table, type 6\n to make a handwritten Query, type 7\n to check what is in stock at a store, type 8\n to check which stores a product is located, type 9\n to see check which stores a particular warehouse stocks, type 10\n to exit the program and save your progress, type 0\n";
 		//do we need any more functions?
 		cin >> userInput;
 	 			string input;
@@ -120,6 +120,12 @@ int main(){
 	 			cout << "Enter Barcode Number: ";
 	 			cin >> input;
 	 			ItemLocated(input, projectName);
+	 			break;
+ 			case 10:
+	 			system("clear");
+	 			cout << "Enter Warehouse Number: ";
+	 			cin >> input;
+	 			WarehouseSupplies(input, projectName);
 	 			break;
 			case 0: // quit
 				system("clear");

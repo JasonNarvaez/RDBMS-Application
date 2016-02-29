@@ -1,3 +1,3 @@
--|testWarehouse|IDNumber
-<|Name,VARCHAR(50)|Location,VARCHAR(200)|IDNumber,INTEGER|
-*|NULL|NULL|NULL|
+-|testWarehouse|WarehouseID
+<|Name,VARCHAR(50)|Location,VARCHAR(200)|WarehouseID,INTEGER|
+*|"north"|"town"|1|

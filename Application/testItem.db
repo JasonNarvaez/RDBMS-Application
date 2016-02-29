@@ -1,3 +1,3 @@
 -|testItem|Barcode
 <|Name,VARCHAR(100)|Brand,VARCHAR(50)|Aisle,VARCHAR(100)|Barcode,INTEGER|
-*|"food"|"stuff"|"1"|123|
+*|NULL|NULL|NULL|NULL|

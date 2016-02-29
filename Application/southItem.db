@@ -1,3 +1,0 @@
--|southItem|Barcode
-<|Name,VARCHAR(100)|Brand,VARCHAR(50)|Aisle,VARCHAR(100)|Barcode,INTEGER|
-*|"food"|"food-brand"|"1"|123|

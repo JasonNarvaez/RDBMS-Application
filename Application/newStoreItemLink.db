@@ -1,3 +1,0 @@
--|newStoreItemLink|StoreID|ItemID
-<|StoreID,INTEGER|Barcode,INTEGER|
-*|12|123|
