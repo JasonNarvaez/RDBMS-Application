@@ -1,3 +1,30 @@
+/*
+Main:
+	Gives user option to create or upload a project
+
+	When starting the program:
+		Commands:
+		'q' exits the program
+			if user chooses not to open or create a project
+			program will quit
+		'y' yes
+		'n' no
+
+	When creating/updating a project:
+		Commands:
+		0 - save and quit
+		1 - show tables
+		2 - add object (warehouse, store, item)
+		3 - link (item with store, store to warehouse)
+		4 - delete
+		5 - update
+		6 - save
+		7 - make custom query
+		8 - check stock
+		9 - product location
+	   10 - check store warehouse relations
+
+*/
 //main.cpp
 #include <algorithm>
 #include <iomanip>
@@ -16,13 +43,15 @@ int main(){
 	int userInput = -1; // for the switch statement
 	string input; // for the general user input
 	string projectName; // holds the project name
+
 	system("clear");
+
 	while(input != "q"){
 
 		cout << "Would you like to create a new Project?[y/n]\n";
 		cin >> input;
 
-		if(input == "y"){ 
+		if(input == "y" || input == "Y"){ 
 
 			cout << "What would you like to name it?\n>";
 			cin >> projectName;
@@ -30,18 +59,18 @@ int main(){
 			break;
 
 		}
-		else if(input == "n"){
+		else if(input == "n" || input == "N"){
 
 			cout << "Would you like to open a past project?[y/n]\n";
 			cin >> input;
 
-			if(input == "n") {
+			if(input == "n" || input == "N") {
 
 				cout << "ok, Goodbye.\n";
 				return 0;
 
 			}
-			else if(input == "y"){
+			else if(input == "y" || input == "Y"){
 
 				cout << "Please enter the name of the project you wish to open.\n";
 				cin >> projectName;
