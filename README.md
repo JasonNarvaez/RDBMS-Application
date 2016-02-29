@@ -5,6 +5,8 @@
 <h3>Description</h3>
 This is the relational database management system (RDBMS) engine and parser for our team project for CSCE 315 - Programming studio.
 
+There is also an application that could be used to track inventory between warehouses and stores. There are three entities <strong> Items, Stores, and Warehouses</strong> and two relations <strong> Items in Stores and Warehouses that stock Stores </strong>
+
 <h3>Development Log</h3>
 https://docs.google.com/document/d/1jCeiHIZrsFMUjXuWPWD7mqUyc7AsgWJRsMEUlqFJPvo/edit
 
